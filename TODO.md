@@ -2,12 +2,12 @@
 
 List of things that I still need to do in order to make GoESL completed
 
-[x] Better documentation
-[x] FreeSWITCH WIKI Golang page (proposal)
-[ ] Unit testing (in progress)
-[ ] Add log/slog as default logger
-[ ] Add reconnect logic
-[x] Add body option to SendEvent
+- [x] Better documentation
+- [x] FreeSWITCH WIKI Golang page (proposal)
+- [ ] Unit testing (in progress)
+- [ ] Add log/slog as default logger
+- [ ] Add reconnect logic
+- [x] Add body option to SendEvent
     - Note:
         ```go
         	eventStrBuilder.WriteString("sendevent ")
@@ -15,5 +15,5 @@ List of things that I still need to do in order to make GoESL completed
 	        eventStrBuilder.WriteString("\n")
 	        eventStrBuilder.WriteString(*message)
         ```
-[ ] More examples
+- [ ] More examples
 
