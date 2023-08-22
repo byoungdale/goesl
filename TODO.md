@@ -11,9 +11,9 @@ List of things that I still need to do in order to make GoESL completed
     - Note:
         ```go
         eventStrBuilder.WriteString("sendevent ")
-	        eventStrBuilder.WriteString(*eventName)
-	        eventStrBuilder.WriteString("\n")
-	        eventStrBuilder.WriteString(*message)
+	    eventStrBuilder.WriteString(*eventName)
+	    eventStrBuilder.WriteString("\n")
+	    eventStrBuilder.WriteString(*message)
         ```
 - [ ] More examples
 
