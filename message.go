@@ -136,7 +136,7 @@ func (m *Message) Parse() error {
 				m.Headers[k] = v.(string)
 			default:
 				//delete(m.Headers, k)
-				Warning("Removed non-string property (%s)", k)
+				Warn("Removed non-string property (%s)", k)
 			}
 		}
 

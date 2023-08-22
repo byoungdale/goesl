@@ -1,4 +1,4 @@
-[![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/0x19/goesl/tree/master/LICENSE)
+[![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/byoungdale/goesl/tree/master/LICENSE)
 [![Build Status](https://travis-ci.org/0x19/goesl.svg)](https://travis-ci.org/0x19/goesl)
 [![Go 1.3 Ready](https://img.shields.io/badge/Go%201.3-Ready-green.svg?style=flat)]()
 [![Go 1.4 Ready](https://img.shields.io/badge/Go%201.4-Ready-green.svg?style=flat)]()
@@ -12,26 +12,26 @@ Point of this library is to fully implement FreeSWITCH ESL and bring outbound se
 
 ### WARNING
 
-Before using this code, please read following discussion: https://github.com/0x19/goesl/discussions/35
+Before using this code, please read following discussion: https://github.com/byoungdale/goesl/discussions/35
 
 In short, I don't have time right now contributing to this project. 
 
 
 ### TODO?
 
-You can find what still needs to be done at [GoESL TODO](https://github.com/0x19/goesl/blob/master/TODO.md)
+You can find what still needs to be done at [GoESL TODO](https://github.com/byoungdale/goesl/blob/master/TODO.md)
 
 
 ### Examples
 
-There are few different types of examples that can be found at [GoESL Examples](https://github.com/0x19/goesl/tree/master/examples).
+There are few different types of examples that can be found at [GoESL Examples](https://github.com/byoungdale/goesl/tree/master/examples).
 
 Feel free to suggest more examples :)
 
 
 ### Contributions / Issues?
 
-Please reach me over nevio.vesic@gmail.com or visit my [website](http://www.neviovesic.com/) or submit new [issue](https://github.com/0x19/goesl/issues/new). I'd prefer tho if you would submit [issue](https://github.com/0x19/goesl/issues/new).
+Please reach me over nevio.vesic@gmail.com or visit my [website](http://www.neviovesic.com/) or submit new [issue](https://github.com/byoungdale/goesl/issues/new). I'd prefer tho if you would submit [issue](https://github.com/byoungdale/goesl/issues/new).
 
 
 ### License

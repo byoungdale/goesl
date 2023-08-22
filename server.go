@@ -26,7 +26,7 @@ type OutboundServer struct {
 
 // Start - Will start new outbound server
 func (s *OutboundServer) Start() error {
-	Notice("Starting Freeswitch Outbound Server @ (address: %s) ...", s.Addr)
+	Info("Starting Freeswitch Outbound Server @ (address: %s) ...", s.Addr)
 
 	var err error
 
@@ -41,7 +41,7 @@ func (s *OutboundServer) Start() error {
 
 	go func() {
 		for {
-			Warning("Waiting for incoming connections ...")
+			Warn("Waiting for incoming connections ...")
 
 			c, err := s.Accept()
 
@@ -57,7 +57,7 @@ func (s *OutboundServer) Start() error {
 				m:    make(chan *Message),
 			}
 
-			Notice("Got new connection from: %s", conn.OriginatorAddr())
+			Info("Got new connection from: %s", conn.OriginatorAddr())
 
 			go conn.Handle()
 
@@ -75,7 +75,7 @@ func (s *OutboundServer) Start() error {
 
 // Stop - Will close server connection once SIGTERM/Interrupt is received
 func (s *OutboundServer) Stop() {
-	Warning("Stopping Outbound Server ...")
+	Warn("Stopping Outbound Server ...")
 	s.Close()
 }
 

@@ -3,17 +3,17 @@ Go ESL
 
 ###Introduction
 
-[GoESL](https://github.com/0x19/goesl) is a very simple and straight forward [Go](http://golang.org/) package designed to interact with FreeSWITCH [ESL](https://freeswitch.org/confluence/display/FREESWITCH/Event+Socket+Library). GoESL supports both client and server. Server is used to bind and listen for incoming FreeSWITCH messages where client is used for sending commands. GoESL package contains few helpers which can be found in helpers.go so you can easily answer, hangup or send api events.
+[GoESL](https://github.com/byoungdale/goesl) is a very simple and straight forward [Go](http://golang.org/) package designed to interact with FreeSWITCH [ESL](https://freeswitch.org/confluence/display/FREESWITCH/Event+Socket+Library). GoESL supports both client and server. Server is used to bind and listen for incoming FreeSWITCH messages where client is used for sending commands. GoESL package contains few helpers which can be found in helpers.go so you can easily answer, hangup or send api events.
 
 
 ###Installation
 
-[GoESL](https://github.com/0x19/goesl) is a package as-is. Standard go get will get you going :) Make sure to have go properly setup based on your operating system.
+[GoESL](https://github.com/byoungdale/goesl) is a package as-is. Standard go get will get you going :) Make sure to have go properly setup based on your operating system.
 
 If you're unsure how to do it [Go Getting Started](http://golang.org/doc/install) will help you out.
 
 ```go
-go get github.com/0x19/goesl
+go get github.com/byoungdale/goesl
 ```
 
 
@@ -23,11 +23,11 @@ Following code is the only thing you need to do in order to import GoESL
 
 ```go
 import (
-	. "github.com/0x19/goesl"
+	. "github.com/byoungdale/goesl"
 )
 ```
 
-All available examples can be found at [GoESL Examples](https://github.com/0x19/goesl/tree/master/examples)
+All available examples can be found at [GoESL Examples](https://github.com/byoungdale/goesl/tree/master/examples)
 
 
 ####Client Example
@@ -40,7 +40,7 @@ package examples
 import (
 	"flag"
 	"fmt"
-	. "github.com/0x19/goesl"
+	. "github.com/byoungdale/goesl"
 	"runtime"
 	"strings"
 )
@@ -106,7 +106,7 @@ Following example will start server and listen for incoming messages. Once recei
 package examples
 
 import (
-	. "github.com/0x19/goesl"
+	. "github.com/byoungdale/goesl"
 	"runtime"
 	"strings"
 )

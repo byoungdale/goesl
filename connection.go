@@ -9,6 +9,7 @@ package goesl
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -21,9 +22,12 @@ import (
 // Main connection against ESL - Gotta add more description here
 type SocketConnection struct {
 	net.Conn
-	err chan error
-	m   chan *Message
-	mtx sync.Mutex
+	reconnects           int
+	maxReconnectInterval time.Duration
+	delayFunc            func(time.Duration, time.Duration) func() time.Duration // used to create/reset the delay function
+	err                  chan error
+	m                    chan *Message
+	mtx                  *sync.RWMutex
 }
 
 // Dial - Will establish timedout dial against specified address. In this case, it will be freeswitch server
@@ -68,7 +72,8 @@ func (c *SocketConnection) SendMany(cmds []string) error {
 }
 
 // SendEvent - Will loop against passed event headers
-func (c *SocketConnection) SendEvent(eventHeaders []string) error {
+// If you don't need a event body, pass in empty string ""
+func (c *SocketConnection) SendEvent(eventName string, eventHeaders []string, eventBody string) error {
 	if len(eventHeaders) <= 0 {
 		return fmt.Errorf(ECouldNotSendEvent, len(eventHeaders))
 	}
@@ -77,7 +82,7 @@ func (c *SocketConnection) SendEvent(eventHeaders []string) error {
 	c.mtx.Lock()
 	defer c.mtx.Unlock()
 
-	_, err := io.WriteString(c, "sendevent ")
+	_, err := io.WriteString(c, "sendevent "+eventName)
 	if err != nil {
 		return err
 	}
@@ -98,6 +103,18 @@ func (c *SocketConnection) SendEvent(eventHeaders []string) error {
 	_, err = io.WriteString(c, "\r\n")
 	if err != nil {
 		return err
+	}
+
+	if eventBody != "" {
+		_, err := io.WriteString(c, eventBody)
+		if err != nil {
+			return err
+		}
+
+		_, err = io.WriteString(c, "\r\n")
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -182,7 +199,7 @@ func (c *SocketConnection) OriginatorAddr() net.Addr {
 }
 
 // ReadMessage - Will read message from channels and return them back accordingy.
-// If error is received, error will be returned. If not, message will be returned back!
+//  If error is received, error will be returned. If not, message will be returned back!
 func (c *SocketConnection) ReadMessage() (*Message, error) {
 	Debug("Waiting for connection message to be received ...")
 
@@ -228,4 +245,30 @@ func (c *SocketConnection) Close() error {
 	}
 
 	return nil
+}
+
+// Connected checks if socket connected. Can be extended with pings
+func (c *SocketConnection) Connected() (ok bool) {
+	c.mtx.RLock()
+	ok = (c.Conn != nil)
+	c.mtx.RUnlock()
+	return
+}
+
+// ReconnectIfNeeded if not connected, attempt reconnect if allowed
+func (c *SocketConnection) ReconnectIfNeeded() (err error) {
+	if c.Connected() { // No need to reconnect
+		return
+	}
+	delay := c.delayFunc(time.Second, c.maxReconnectInterval)
+	for i := 0; c.reconnects == -1 || i < c.reconnects; i++ { // Maximum reconnects reached, -1 for infinite reconnects
+		if c.Connected() {
+			break // No error or unrelated to connection
+		}
+		time.Sleep(delay())
+	}
+	if err == nil && !c.Connected() {
+		return errors.New("Not connected to FreeSWITCH")
+	}
+	return // nil or last error in the loop
 }

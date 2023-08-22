@@ -9,9 +9,10 @@ package examples
 import (
 	"flag"
 	"fmt"
-	. "github.com/0x19/goesl"
 	"runtime"
 	"strings"
+
+	. "github.com/byoungdale/goesl"
 )
 
 var (
