@@ -10,7 +10,7 @@ List of things that I still need to do in order to make GoESL completed
 - [x] Add body option to SendEvent
     - Note:
         ```go
-        	eventStrBuilder.WriteString("sendevent ")
+        eventStrBuilder.WriteString("sendevent ")
 	        eventStrBuilder.WriteString(*eventName)
 	        eventStrBuilder.WriteString("\n")
 	        eventStrBuilder.WriteString(*message)
