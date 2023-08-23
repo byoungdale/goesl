@@ -5,16 +5,13 @@
 
 ## FreeSWITCH Event Socket Library Wrapper for Go
 
+Forked from [0x19](https://github.com/0x19/goesl/) because there are things I need to add quickly and might not want to be merged.
+
+Check it out if you need something other than what is here.
+
 GoESL is a small wrapper around [FreeSWITCH](https://freeswitch.org/) [Event Socket Library](https://wiki.freeswitch.org/wiki/Event_Socket_Library) written in [Go](http://golang.org).
 
-Point of this library is to fully implement FreeSWITCH ESL and bring outbound server as inbound client to you, fellow Go developer :)
-
-### WARNING
-
-Before using this code, please read following discussion: https://github.com/byoungdale/goesl/discussions/35
-
-In short, I don't have time right now contributing to this project. 
-
+Point of this library is to fully implement FreeSWITCH ESL and bring outbound server and inbound client to the Go community :green_heart: :telephone_receiver:
 
 ### TODO?
 
