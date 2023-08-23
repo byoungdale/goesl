@@ -3,11 +3,11 @@
 ![Test Status](https://github.com/byoungdale/goesl/actions/workflows/test.yml/badge.svg?event=push)
 [![Go 1.20 Ready](https://img.shields.io/badge/Go%201.20-Ready-green.svg?style=flat)]()
 
-## FreeSWITCH Event Socket Library Wrapper for Go
-
 Forked from [0x19's library](https://github.com/0x19/goesl/) because there are things I need to add quickly and might not want to be merged.
 
 Check it out if you need something other than what is here.
+
+## FreeSWITCH Event Socket Library Wrapper for Go
 
 GoESL is a small wrapper around [FreeSWITCH](https://freeswitch.org/) [Event Socket Library](https://wiki.freeswitch.org/wiki/Event_Socket_Library) written in [Go](http://golang.org).
 
