@@ -5,7 +5,7 @@
 
 ## FreeSWITCH Event Socket Library Wrapper for Go
 
-Forked from [0x19](https://github.com/0x19/goesl/) because there are things I need to add quickly and might not want to be merged.
+Forked from [0x19's library](https://github.com/0x19/goesl/) because there are things I need to add quickly and might not want to be merged.
 
 Check it out if you need something other than what is here.
 
