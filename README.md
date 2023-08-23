@@ -13,7 +13,7 @@ GoESL is a small wrapper around [FreeSWITCH](https://freeswitch.org/) [Event Soc
 
 The point of this library is to fully implement FreeSWITCH ESL and bring outbound server and inbound client to the Go community :green_heart: :telephone_receiver:
 
-### TODO?
+### TODO
 
 You can find what still needs to be done at [GoESL TODO](https://github.com/byoungdale/goesl/blob/master/TODO.md)
 
