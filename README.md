@@ -1,8 +1,7 @@
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/byoungdale/goesl/tree/master/LICENSE)
-[![Build Status](https://github.com/byoungdale/goesl/actions/workflows/go.yml/badge.svg?event=push)]
-[![Go 1.3 Ready](https://img.shields.io/badge/Go%201.3-Ready-green.svg?style=flat)]()
-[![Go 1.4 Ready](https://img.shields.io/badge/Go%201.4-Ready-green.svg?style=flat)]()
-[![Go 1.5 Ready](https://img.shields.io/badge/Go%201.5-Ready-green.svg?style=flat)]()
+![Build Status](https://github.com/byoungdale/goesl/actions/workflows/go.yml/badge.svg?event=push)
+![Test Status](https://github.com/byoungdale/goesl/actions/workflows/test.yml/badge.svg?event=push)
+[![Go 1.20 Ready](https://img.shields.io/badge/Go%201.3-Ready-green.svg?style=flat)]()
 
 ## FreeSWITCH Event Socket Library Wrapper for Go
 
