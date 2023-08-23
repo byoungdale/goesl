@@ -15,5 +15,7 @@ List of things that I still need to do in order to make GoESL completed
 	    eventStrBuilder.WriteString("\n")
 	    eventStrBuilder.WriteString(*message)
         ```
+- [ ] Add Job-UUID in SendMsg to Message Parse() so it's available as a header
 - [ ] More examples
+
 

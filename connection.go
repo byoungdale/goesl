@@ -142,7 +142,6 @@ func (c *SocketConnection) ExecuteUUID(uuid string, command string, args string,
 
 // SendMsg - Basically this func will send message to the opened connection
 func (c *SocketConnection) SendMsg(msg map[string]string, uuid, data string) (m *Message, err error) {
-
 	b := bytes.NewBufferString("sendmsg")
 
 	if uuid != "" {

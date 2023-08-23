@@ -1,6 +1,8 @@
 package goesl
 
 import (
+	"bufio"
+	"bytes"
 	"net"
 	"sync"
 	"testing"
@@ -15,6 +17,7 @@ func TestDial(t *testing.T) {
 	_, err := c.Dial("127.0.0.1", "8021", time.Duration(10))
 	if err == nil {
 		t.Fatal("Expected non-nil error")
+		t.Fail()
 	}
 }
 
@@ -47,12 +50,14 @@ func TestSend(t *testing.T) {
 
 	if err != nil {
 		t.Logf("Got error sending request: '%v'", err)
+		t.Fail()
 	}
 
 	err = c.Send("should error\r\n")
 
 	if err == nil {
 		t.Fatal("Expeceted non-nil err")
+		t.Fail()
 	}
 }
 
@@ -87,6 +92,7 @@ func TestSendMany(t *testing.T) {
 
 	if err != nil {
 		t.Logf("Got error sending request: '%v'", err)
+		t.Fail()
 	}
 
 	withInvalidCmd := []string{"auth ClueCon", "log debug", "exploit\r\n"}
@@ -95,6 +101,7 @@ func TestSendMany(t *testing.T) {
 
 	if err == nil {
 		t.Fatal("Expeceted non-nil err")
+		t.Fail()
 	}
 }
 
@@ -130,6 +137,7 @@ func TestSendEvent(t *testing.T) {
 
 	if err == nil || err.Error() != "Must send at least one event header, detected `0` header" {
 		t.Logf("Got error sending request: '%v'", err)
+		t.Fail()
 	}
 
 	// Test sending with headers
@@ -173,6 +181,7 @@ func TestSendEvent(t *testing.T) {
 
 	if err != nil {
 		t.Logf("Got error sending request: '%v'", err)
+		t.Fail()
 	}
 
 	// Test sending body
@@ -194,7 +203,92 @@ func TestSendEvent(t *testing.T) {
 
 	if err != nil {
 		t.Logf("Got error sending request: '%v'", err)
+		t.Fail()
 	}
+}
+
+func TestSendMsg(t *testing.T) {
+	serverConn, clientConn := net.Pipe()
+	c := &SocketConnection{
+		Conn: clientConn,
+		mtx:  &sync.RWMutex{},
+		err:  make(chan error),
+		m:    make(chan *Message),
+	}
+	defer c.Close()
+	defer serverConn.Close()
+	defer clientConn.Close()
+
+	// Server
+	go func() {
+		t.Log("Server: Received from client\n")
+		for {
+			buf := make([]byte, 2048)
+			n, err := serverConn.Read(buf)
+			if err != nil {
+				t.Logf("Server: Error reading from client: '%v'", err)
+				return
+			}
+
+			t.Logf("%s", buf[:n])
+			// Simulate a response from the server to the client
+			response := "Content-Type: command/reply\r\nReply-Text: +OK Job-UUID: c3b923ab-11c9-4063-bede-f6dedafb91ed\r\n\r\n"
+			serverConn.Write([]byte(response))
+		}
+	}()
+
+	// Client
+	go func() {
+		t.Log("Client: Received from client\n")
+		for {
+			buf := make([]byte, 2048)
+			n, err := clientConn.Read(buf)
+			if err != nil {
+				t.Logf("Client: Error reading from client: '%v'", err)
+				c.err <- err
+			}
+
+			t.Logf("%s", buf[:n])
+
+			// Create a *bytes.Buffer and write the byte data into it
+			buffer := bytes.NewBuffer(buf[:n])
+
+			// Create a *bufio.Reader that reads from the *bytes.Buffer
+			reader := bufio.NewReader(buffer)
+
+			m, err := newMessage(reader, true)
+			if err != nil {
+				t.Log("Problem parsing message")
+				c.err <- err
+			}
+			c.m <- m
+		}
+	}()
+
+	// sendmsg <uuid>
+	// call-command: execute
+	// execute-app-name: playback
+	// execute-app-arg: /tmp/test.wav
+
+	msg, err := c.SendMsg(map[string]string{
+		"call-command":     "execute",
+		"execute-app-name": "playback",
+		"execute-app-arg":  "/tmp/test.wav",
+	}, "c3b923ab-11c9-4063-bede-f6dedafb91ed", "")
+
+	if err != nil {
+		t.Logf("Got error sending request: '%v'", err)
+		t.Fail()
+	}
+
+	if msg == nil {
+		t.Log("Expected non-nil result in 'msg'")
+		t.Fail()
+	}
+}
+
+func TestReadMsg(t *testing.T) {
+	t.FailNow()
 }
 
 func TestExecute(t *testing.T) {
@@ -202,10 +296,6 @@ func TestExecute(t *testing.T) {
 }
 
 func TestUUID(t *testing.T) {
-	t.FailNow()
-}
-
-func TestMsg(t *testing.T) {
 	t.FailNow()
 }
 
