@@ -47,7 +47,7 @@ func main() {
 	client.BgApi(fmt.Sprintf("originate %s %s", "sofia/internal/1001@127.0.0.1", "&socket(192.168.1.2:8084 async full)"))
 
 	for {
-		msg, err := client.ReadMessage()
+		msg, err := client.ReadMsg()
 
 		if err != nil {
 

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var requestedLevel = InfoLevel
+var requestedLevel = DebugLevel
 var displayDateTime = false
 var outputDest io.Writer = os.Stderr
 
@@ -77,7 +77,7 @@ func LogColorSet(level LogLevel) string {
 	case InfoLevel:
 		return LogLColorCyan
 	case WarnLevel:
-		return LogLColorYellow
+		return LogLColorPurple
 	case ErrorLevel:
 		return LogLColorRed
 	case FatalLevel:

@@ -60,7 +60,7 @@ func (m *Message) Parse() error {
 		return fmt.Errorf("Parse EOF")
 	}
 
-	// Will handle content length by checking if appropriate lenght is here and if it is than
+	// Will handle content length by checking if appropriate length is here and if it is than
 	// we are going to read it into body
 	if lv := cmr.Get("Content-Length"); lv != "" {
 		l, err := strconv.Atoi(lv)

@@ -7,9 +7,10 @@
 package examples
 
 import (
-	. "github.com/byoungdale/goesl"
 	"runtime"
 	"strings"
+
+	. "github.com/byoungdale/goesl"
 )
 
 var (
@@ -91,7 +92,7 @@ func handle(s *OutboundServer) {
 
 			go func() {
 				for {
-					msg, err := conn.ReadMessage()
+					msg, err := conn.ReadMsg()
 
 					if err != nil {
 

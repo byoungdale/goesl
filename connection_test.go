@@ -288,7 +288,66 @@ func TestSendMsg(t *testing.T) {
 }
 
 func TestReadMsg(t *testing.T) {
-	t.FailNow()
+	serverConn, clientConn := net.Pipe()
+	c := &SocketConnection{
+		Conn: clientConn,
+		mtx:  &sync.RWMutex{},
+		err:  make(chan error),
+		m:    make(chan *Message),
+	}
+	defer c.Close()
+	defer serverConn.Close()
+	defer clientConn.Close()
+
+	// Server
+	go func() {
+		t.Log("Sending event from server")
+		// Simulate a event from the server to the client
+		event := "Content-Length: 907\r\nContent-Type: text/event-plain\r\n\r\nHangup-Cause: NORMAL_CLEARING\r\nChannel-Read-Codec-Name: PCMU\r\nChannel-Read-Codec-Rate: 8000\r\nChannel-Write-Codec-Name: PCMU\r\nChannel-Write-Codec-Rate: 8000\r\nCaller-Username: jonas\r\nCaller-Dialplan: XML\r\nCaller-Caller-ID-Name: jonas\r\nCaller-Caller-ID-Number: jonas\r\nCaller-Network-Addr: 192.168.0.58\r\nCaller-Destination-Number: 541\r\nCaller-Unique-ID: 0dd4e4f7-36ed-a04d-a8f7-7aebb683af50\r\nCaller-Source: mod_sofia\r\nCaller-Context: default\r\nCaller-Screen-Bit: yes\r\nCaller-Privacy-Hide-Name: no\r\nCaller-Privacy-Hide-Number: no\r\nOriginatee-Username: jonas\r\nOriginatee-Dialplan: XML\r\nOriginatee-Caller-ID-Name: jonas\r\nOriginatee-Caller-ID-Number: jonas\r\nOriginatee-Network-Addr: 192.168.0.58\r\nOriginatee-Unique-ID: f66e8e31-c9fb-9b41-a9a2-a1586facb97f\r\nOriginatee-Source: mod_sofia\r\nOriginatee-Context: default\r\nOriginatee-Screen-Bit: yes\r\nOriginatee-Privacy-Hide-Name: no\r\nOriginatee-Privacy-Hide-Number: no\r\n\r\n"
+		serverConn.Write([]byte(event))
+	}()
+
+	// Client
+	go func() {
+		t.Log("Client: Received from client\n")
+		for {
+			buf := make([]byte, 2048)
+			n, err := clientConn.Read(buf)
+			if err != nil {
+				t.Logf("Client: Error reading from client: '%v'", err)
+				c.err <- err
+			}
+
+			Warn("Hello -> %s", buf[:n])
+
+			// Create a *bytes.Buffer and write the byte data into it
+			buffer := bytes.NewBuffer(buf[:n])
+
+			// Create a *bufio.Reader that reads from the *bytes.Buffer
+			reader := bufio.NewReader(buffer)
+
+			m, err := newMessage(reader, true)
+			if err != nil {
+				t.Log("Problem parsing message")
+				c.err <- err
+			}
+			c.m <- m
+		}
+	}()
+
+	t.Log("Going to read message")
+	msg, err := c.ReadMsg()
+	t.Log("client got message from server")
+
+	if err != nil {
+		t.Logf("Got error from ReadMsg: '%v'", err)
+	}
+
+	if msg == nil {
+		t.Fatal("Expected msg to be non-nil")
+	}
+
+	Debug("%s", msg)
 }
 
 func TestExecute(t *testing.T) {
@@ -300,10 +359,6 @@ func TestUUID(t *testing.T) {
 }
 
 func TestOriginatorAddr(t *testing.T) {
-	t.FailNow()
-}
-
-func TestReadMessage(t *testing.T) {
 	t.FailNow()
 }
 

@@ -8,10 +8,11 @@ package examples
 
 import (
 	"fmt"
-	. "github.com/byoungdale/goesl"
 	"os"
 	"runtime"
 	"strings"
+
+	. "github.com/byoungdale/goesl"
 )
 
 var welcomeFile = "%s/media/welcome.wav"
@@ -88,7 +89,7 @@ func handle(s *OutboundServer) {
 
 			go func() {
 				for {
-					msg, err := conn.ReadMessage()
+					msg, err := conn.ReadMsg()
 
 					if err != nil {
 
