@@ -239,7 +239,7 @@ func TestSendMsg(t *testing.T) {
 
 	// Client
 	go func() {
-		t.Log("Client: Received from client\n")
+		t.Log("Client: Received from server\n")
 		for {
 			buf := make([]byte, 2048)
 			n, err := clientConn.Read(buf)
@@ -309,7 +309,7 @@ func TestReadMsg(t *testing.T) {
 
 	// Client
 	go func() {
-		t.Log("Client: Received from client\n")
+		t.Log("Client: Received from server\n")
 		for {
 			buf := make([]byte, 2048)
 			n, err := clientConn.Read(buf)
@@ -317,8 +317,6 @@ func TestReadMsg(t *testing.T) {
 				t.Logf("Client: Error reading from client: '%v'", err)
 				c.err <- err
 			}
-
-			Warn("Hello -> %s", buf[:n])
 
 			// Create a *bytes.Buffer and write the byte data into it
 			buffer := bytes.NewBuffer(buf[:n])
@@ -346,24 +344,210 @@ func TestReadMsg(t *testing.T) {
 	if msg == nil {
 		t.Fatal("Expected msg to be non-nil")
 	}
-
-	Debug("%s", msg)
 }
 
 func TestExecute(t *testing.T) {
-	t.FailNow()
+	serverConn, clientConn := net.Pipe()
+	c := &SocketConnection{
+		Conn: clientConn,
+		mtx:  &sync.RWMutex{},
+		err:  make(chan error),
+		m:    make(chan *Message),
+	}
+	defer c.Close()
+	defer serverConn.Close()
+	defer clientConn.Close()
+
+	// Server
+	go func() {
+		t.Log("Server: Received from client\n")
+		for {
+			buf := make([]byte, 2048)
+			n, err := serverConn.Read(buf)
+			if err != nil {
+				t.Logf("Server: Error reading from client: '%v'", err)
+				return
+			}
+
+			t.Logf("%s", buf[:n])
+			// Simulate a response from the server to the client
+			response := "Content-Type: command/reply\r\nReply-Text: +OK\r\n\r\n"
+			serverConn.Write([]byte(response))
+		}
+	}()
+
+	// Client
+	go func() {
+		t.Log("Client: Received from server\n")
+		for {
+			buf := make([]byte, 2048)
+			n, err := clientConn.Read(buf)
+			if err != nil {
+				t.Logf("Client: Error reading from client: '%v'", err)
+				c.err <- err
+			}
+
+			t.Logf("%s", buf[:n])
+
+			// Create a *bytes.Buffer and write the byte data into it
+			buffer := bytes.NewBuffer(buf[:n])
+
+			// Create a *bufio.Reader that reads from the *bytes.Buffer
+			reader := bufio.NewReader(buffer)
+
+			m, err := newMessage(reader, true)
+			if err != nil {
+				t.Log("Problem parsing message")
+				c.err <- err
+			}
+			c.m <- m
+		}
+	}()
+
+	// sendmsg
+	// call-command: execute
+	// execute-app-name: playback
+	// execute-app-arg: /tmp/test.wav\n\n
+	if _, err := c.Execute("playback", "/tmp/test.wav", true); err != nil {
+		t.Fatalf("Got error while executing playback: %s", err)
+	}
 }
 
-func TestUUID(t *testing.T) {
-	t.FailNow()
+func TestExecuteUUID(t *testing.T) {
+	serverConn, clientConn := net.Pipe()
+	c := &SocketConnection{
+		Conn: clientConn,
+		mtx:  &sync.RWMutex{},
+		err:  make(chan error),
+		m:    make(chan *Message),
+	}
+	defer c.Close()
+	defer serverConn.Close()
+	defer clientConn.Close()
+
+	// Server
+	go func() {
+		t.Log("Server: Received from client\n")
+		for {
+			buf := make([]byte, 2048)
+			n, err := serverConn.Read(buf)
+			if err != nil {
+				t.Logf("Server: Error reading from client: '%v'", err)
+				return
+			}
+
+			t.Logf("%s", buf[:n])
+			// Simulate a response from the server to the client
+			response := "Content-Type: command/reply\r\nReply-Text: +OK\r\n\r\n"
+			serverConn.Write([]byte(response))
+		}
+	}()
+
+	// Client
+	go func() {
+		t.Log("Client: Received from server\n")
+		for {
+			buf := make([]byte, 2048)
+			n, err := clientConn.Read(buf)
+			if err != nil {
+				t.Logf("Client: Error reading from client: '%v'", err)
+				c.err <- err
+			}
+
+			t.Logf("%s", buf[:n])
+
+			// Create a *bytes.Buffer and write the byte data into it
+			buffer := bytes.NewBuffer(buf[:n])
+
+			// Create a *bufio.Reader that reads from the *bytes.Buffer
+			reader := bufio.NewReader(buffer)
+
+			m, err := newMessage(reader, true)
+			if err != nil {
+				t.Log("Problem parsing message")
+				c.err <- err
+			}
+			c.m <- m
+		}
+	}()
+
+	// sendmsg <uuid>
+	// call-command: execute
+	// execute-app-name: playback
+	// execute-app-arg: /tmp/test.wav
+	// event-lock: true
+	if _, err := c.ExecuteUUID("c3b923ab-11c9-4063-bede-f6dedafb91ed", "playback", "/tmp/test.wav", true); err != nil {
+		t.Fatalf("Got error while executing playback: %s", err)
+	}
 }
 
+// Going to be a pipe in test cases
+// Probably need better testing here
 func TestOriginatorAddr(t *testing.T) {
-	t.FailNow()
+	serverConn, clientConn := net.Pipe()
+	c := &SocketConnection{
+		Conn: clientConn,
+		mtx:  &sync.RWMutex{},
+		err:  make(chan error),
+		m:    make(chan *Message),
+	}
+	defer c.Close()
+	defer serverConn.Close()
+	defer clientConn.Close()
+
+	addr := c.OriginatorAddr()
+	if addr == nil {
+		t.Fatal("couldn't get an address")
+	}
 }
 
 func TestHandle(t *testing.T) {
-	t.FailNow()
+	serverConn, clientConn := net.Pipe()
+	c := &SocketConnection{
+		Conn: clientConn,
+		mtx:  &sync.RWMutex{},
+		err:  make(chan error),
+		m:    make(chan *Message),
+	}
+	defer c.Close()
+	defer serverConn.Close()
+	defer clientConn.Close()
+
+	// Server
+	go func() {
+		t.Log("Sending event from server")
+		// Simulate a event from the server to the client
+		event := "Content-Length: 907\r\nContent-Type: text/event-plain\r\n\r\nHangup-Cause: NORMAL_CLEARING\r\nChannel-Read-Codec-Name: PCMU\r\nChannel-Read-Codec-Rate: 8000\r\nChannel-Write-Codec-Name: PCMU\r\nChannel-Write-Codec-Rate: 8000\r\nCaller-Username: jonas\r\nCaller-Dialplan: XML\r\nCaller-Caller-ID-Name: jonas\r\nCaller-Caller-ID-Number: jonas\r\nCaller-Network-Addr: 192.168.0.58\r\nCaller-Destination-Number: 541\r\nCaller-Unique-ID: 0dd4e4f7-36ed-a04d-a8f7-7aebb683af50\r\nCaller-Source: mod_sofia\r\nCaller-Context: default\r\nCaller-Screen-Bit: yes\r\nCaller-Privacy-Hide-Name: no\r\nCaller-Privacy-Hide-Number: no\r\nOriginatee-Username: jonas\r\nOriginatee-Dialplan: XML\r\nOriginatee-Caller-ID-Name: jonas\r\nOriginatee-Caller-ID-Number: jonas\r\nOriginatee-Network-Addr: 192.168.0.58\r\nOriginatee-Unique-ID: f66e8e31-c9fb-9b41-a9a2-a1586facb97f\r\nOriginatee-Source: mod_sofia\r\nOriginatee-Context: default\r\nOriginatee-Screen-Bit: yes\r\nOriginatee-Privacy-Hide-Name: no\r\nOriginatee-Privacy-Hide-Number: no\r\n\r\n"
+		serverConn.Write([]byte(event))
+	}()
+
+	// Client
+	go func() {
+		t.Log("Client: Received from server\n")
+		for {
+			buf := make([]byte, 2048)
+			n, err := clientConn.Read(buf)
+			if err != nil {
+				t.Logf("Client: Error reading from client: '%v'", err)
+				c.err <- err
+			}
+
+			// Create a *bytes.Buffer and write the byte data into it
+			buffer := bytes.NewBuffer(buf[:n])
+
+			// Create a *bufio.Reader that reads from the *bytes.Buffer
+			reader := bufio.NewReader(buffer)
+
+			m, err := newMessage(reader, true)
+			if err != nil {
+				t.Log("Problem parsing message")
+				c.err <- err
+			}
+			c.m <- m
+		}
+	}()
+
+	c.Handle()
 }
 
 func TestClose(t *testing.T) {
