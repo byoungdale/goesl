@@ -267,7 +267,7 @@ func (c *SocketConnection) ReconnectIfNeeded() (err error) {
 		time.Sleep(delay())
 	}
 	if err == nil && !c.Connected() {
-		return errors.New("Not connected to FreeSWITCH")
+		return errors.New("not connected to FreeSWITCH")
 	}
 	return // nil or last error in the loop
 }

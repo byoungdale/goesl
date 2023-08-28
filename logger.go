@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var requestedLevel = DebugLevel
+var requestedLevel = InfoLevel
 var displayDateTime = false
 var outputDest io.Writer = os.Stderr
 

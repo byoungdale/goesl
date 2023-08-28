@@ -72,7 +72,12 @@ func (m *Message) Parse() error {
 
 		m.Body = make([]byte, l)
 
+		// TODO
+		// Add context here for timeout handling
+		// If bad Content-Length is passed
+		// this will hang forever
 		if _, err := io.ReadFull(m.r, m.Body); err != nil {
+			Info("AND HERE")
 			Error(ECouldNotReadyBody, err)
 			return err
 		}
@@ -131,16 +136,16 @@ func (m *Message) Parse() error {
 
 		// Copy back in:
 		for k, v := range decoded {
-			switch v.(type) {
+			switch v := v.(type) {
 			case string:
-				m.Headers[k] = v.(string)
+				m.Headers[k] = v
 			default:
 				//delete(m.Headers, k)
 				Warn("Removed non-string property (%s)", k)
 			}
 		}
 
-		if v, _ := m.Headers["_body"]; v != "" {
+		if v := m.Headers["_body"]; v != "" {
 			m.Body = []byte(v)
 			delete(m.Headers, "_body")
 		} else {
