@@ -247,11 +247,14 @@ func (c *SocketConnection) Close() error {
 }
 
 // Connected checks if socket connected. Can be extended with pings
+// TODO - add better connection handling
+//   - use heartbeat events from freeswitch
+//   - add bool to SocketConnection 'connected' that is changed on certain errors
 func (c *SocketConnection) Connected() (ok bool) {
 	c.mtx.RLock()
 	ok = (c.Conn != nil)
 	c.mtx.RUnlock()
-	return
+	return ok
 }
 
 // ReconnectIfNeeded if not connected, attempt reconnect if allowed

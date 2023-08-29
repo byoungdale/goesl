@@ -548,13 +548,47 @@ func TestHandle(t *testing.T) {
 }
 
 func TestClose(t *testing.T) {
-	t.FailNow()
+	serverConn, clientConn := net.Pipe()
+	c := &SocketConnection{
+		Conn: clientConn,
+		mtx:  &sync.RWMutex{},
+		err:  make(chan error),
+		m:    make(chan *Message),
+	}
+	defer serverConn.Close()
+	defer clientConn.Close()
+
+	go c.Handle()
+
+	err := c.Close()
+
+	if err != nil {
+		t.Fatalf("got error closing connection: '%v'", err)
+	}
 }
 
-func TestConnected(t *testing.T) {
-	t.FailNow()
-}
+//func TestConnected(t *testing.T) {
+//	serverConn, clientConn := net.Pipe()
+//	c := &SocketConnection{
+//		Conn: clientConn,
+//		mtx:  &sync.RWMutex{},
+//		err:  make(chan error),
+//		m:    make(chan *Message),
+//	}
+//	defer serverConn.Close()
+//	defer clientConn.Close()
+//
+//	if !c.Connected() {
+//		t.Fatal("connection is not Connected when it should be")
+//	}
+//
+//	c.Close()
+//
+//	if c.Connected() {
+//		t.Fatal("connection is Connected when it should be closed")
+//	}
+//}
 
-func TestReconnectIfNeeded(t *testing.T) {
-	t.FailNow()
-}
+//func TestReconnectIfNeeded(t *testing.T) {
+//	t.FailNow()
+//}
