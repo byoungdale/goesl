@@ -46,7 +46,7 @@ func (c *Client) EstablishConnection() error {
 // we will return error.
 func (c *Client) Authenticate() error {
 
-	m, err := newMessage(bufio.NewReaderSize(c, ReadBufferSize), false)
+	m, err := NewMessage(bufio.NewReaderSize(c, ReadBufferSize), false)
 	if err != nil {
 		Error(ECouldNotCreateMessage, err)
 		return err

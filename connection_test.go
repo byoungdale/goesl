@@ -257,7 +257,7 @@ func TestSendMsg(t *testing.T) {
 			// Create a *bufio.Reader that reads from the *bytes.Buffer
 			reader := bufio.NewReader(buffer)
 
-			m, err := newMessage(reader, true)
+			m, err := NewMessage(reader, true)
 			if err != nil {
 				t.Log("Problem parsing message")
 				c.err <- err
@@ -325,7 +325,7 @@ func TestReadMsg(t *testing.T) {
 			// Create a *bufio.Reader that reads from the *bytes.Buffer
 			reader := bufio.NewReader(buffer)
 
-			m, err := newMessage(reader, true)
+			m, err := NewMessage(reader, true)
 			if err != nil {
 				t.Log("Problem parsing message")
 				c.err <- err
@@ -396,7 +396,7 @@ func TestExecute(t *testing.T) {
 			// Create a *bufio.Reader that reads from the *bytes.Buffer
 			reader := bufio.NewReader(buffer)
 
-			m, err := newMessage(reader, true)
+			m, err := NewMessage(reader, true)
 			if err != nil {
 				t.Log("Problem parsing message")
 				c.err <- err
@@ -463,7 +463,7 @@ func TestExecuteUUID(t *testing.T) {
 			// Create a *bufio.Reader that reads from the *bytes.Buffer
 			reader := bufio.NewReader(buffer)
 
-			m, err := newMessage(reader, true)
+			m, err := NewMessage(reader, true)
 			if err != nil {
 				t.Log("Problem parsing message")
 				c.err <- err

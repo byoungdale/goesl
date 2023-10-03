@@ -77,7 +77,6 @@ func (m *Message) Parse() error {
 		// If bad Content-Length is passed
 		// this will hang forever
 		if _, err := io.ReadFull(m.r, m.Body); err != nil {
-			Info("AND HERE")
 			Error(ECouldNotReadyBody, err)
 			return err
 		}
@@ -202,9 +201,9 @@ func (m *Message) Dump() (resp string) {
 	return
 }
 
-// newMessage - Will build and execute parsing against received freeswitch message.
+// NewMessage - Will build and execute parsing against received freeswitch message.
 // As return will give brand new Message{} for you to use it.
-func newMessage(r *bufio.Reader, autoParse bool) (*Message, error) {
+func NewMessage(r *bufio.Reader, autoParse bool) (*Message, error) {
 
 	msg := Message{
 		r:       r,
