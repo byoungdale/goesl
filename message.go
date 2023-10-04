@@ -8,7 +8,6 @@ package goesl
 
 import (
 	"bufio"
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -60,7 +59,7 @@ func (m *Message) Parse() error {
 		return fmt.Errorf("Parse EOF")
 	}
 
-	// Will handle content length by checking if appropriate length is here and if it is than
+	// Will handle content length by checking if appropriate length is here and if it is then
 	// we are going to read it into body
 	if lv := cmr.Get("Content-Length"); lv != "" {
 		l, err := strconv.Atoi(lv)
@@ -152,31 +151,7 @@ func (m *Message) Parse() error {
 		}
 
 	case "text/event-plain":
-		r := bufio.NewReader(bytes.NewReader(m.Body))
-
-		tr := textproto.NewReader(r)
-
-		emh, err := tr.ReadMIMEHeader()
-
-		if err != nil {
-			return fmt.Errorf(ECouldNotReadMIMEHeaders, err)
-		}
-
-		if vl := emh.Get("Content-Length"); vl != "" {
-			length, err := strconv.Atoi(vl)
-
-			if err != nil {
-				Error(EInvalidContentLength, err)
-				return err
-			}
-
-			m.Body = make([]byte, length)
-
-			if _, err = io.ReadFull(r, m.Body); err != nil {
-				Error(ECouldNotReadyBody, err)
-				return err
-			}
-		}
+		Debug("Content-Type is 'text/event-plain'. Nothing more to do with m.Body")
 	}
 
 	return nil

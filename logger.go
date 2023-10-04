@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-var requestedLevel = InfoLevel
+var requestedLevel = FatalLevel
 var displayDateTime = false
 var outputDest io.Writer = os.Stderr
 
@@ -132,6 +132,12 @@ func EnableDateTime() {
 func EnableDebug() {
 	requestedLevel = DebugLevel
 	formatMessage(InfoLevel, "Debug mode enabled")
+}
+
+// EnablFatal so we only see crashes, mostly just for testing
+func EnableFatal() {
+	requestedLevel = FatalLevel
+	formatMessage(InfoLevel, "Fatal mode enabled")
 }
 
 // Debug sends a debug log message.

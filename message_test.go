@@ -13,7 +13,7 @@ func reader(s string) *bufio.Reader {
 
 var (
 	// https://freeswitch.org/confluence/display/FREESWITCH/Event+List
-	ShutdownMessage = `Content-Length: 436
+	ShutdownMessage = `Content-Length: 4
 Content-Type: text/event-plain
 Event-Info: System Shutting Down
 Event-Name: SHUTDOWN
@@ -27,9 +27,11 @@ Event-Date-timestamp: 1201114093012795
 Event-Calling-File: switch_core.c
 Event-Calling-Function: switch_core_destroy
 Event-Calling-Line-Number: 1046
-`
+
+done`
 	EchoResponse = `Content-Type: api/response
 Content-Length: 2
+
 hi`
 
 	HeartbeatMessage = `Event-Name: SOCKET_DATA
@@ -68,31 +70,32 @@ func TestNewMessageMissingMime(t *testing.T) {
 	}
 }
 
-func testNewMessageServerShutdown(t *testing.T) (error, *Message) {
+func TestNewMessageServerShutdown(t *testing.T) {
 	buf := reader(ShutdownMessage)
 	fsMsg, err := NewMessage(buf, true)
 
-	return err, fsMsg
-}
-
-func TestNewMessageServerShutdown(t *testing.T) {
-	err, fsMsg := testNewMessageServerShutdown(t)
-
 	if err != nil {
 		t.Error(err)
 	}
 
-	fsMsg.Headers["Content-Type"] = "text/event-plain"
+	if fsMsg.Headers["Content-Type"] != "text/event-plain" {
+		t.Error("could not parse FreeSWITCH event")
+	}
+
+	if fsMsg.Body == nil {
+		t.Error("Body is empty")
+	}
 }
 
 func TestDump(t *testing.T) {
-	err, fsMsg := testNewMessageServerShutdown(t)
+	buf := reader(ShutdownMessage)
+	fsMsg, err := NewMessage(buf, true)
 
 	if err != nil {
 		t.Error(err)
 	}
 
-	if !strings.Contains(fsMsg.Dump(), "BODY: Event-Info:") {
+	if !strings.Contains(fsMsg.Dump(), "Event-Info: System Shutting Down") {
 		t.Error("freeswitch message dump failed")
 	}
 }
