@@ -5,7 +5,6 @@ List of things that I still need to do in order to make GoESL completed
 - [x] Better documentation
 - [x] FreeSWITCH WIKI Golang page (proposal)
 - [ ] Unit testing (in progress)
-  - [ ] For message.go add tests for each message Content-Type
 - [ ] Add log/slog as default logger
 - [ ] Add Context
 - [ ] Add reconnect logic

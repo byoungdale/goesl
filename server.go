@@ -10,8 +10,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"os/signal"
-	"syscall"
 )
 
 // OutboundServer - In case you need to start server, this Struct have it covered
@@ -94,17 +92,6 @@ func NewOutboundServer(addr string) (*OutboundServer, error) {
 		Proto: "tcp",
 		Conns: make(chan SocketConnection),
 	}
-
-	sig := make(chan os.Signal, 1)
-
-	signal.Notify(sig, os.Interrupt)
-	signal.Notify(sig, syscall.SIGTERM)
-
-	go func() {
-		<-sig
-		server.Stop()
-		os.Exit(1)
-	}()
 
 	return &server, nil
 }
