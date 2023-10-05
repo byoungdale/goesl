@@ -1,5 +1,6 @@
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/byoungdale/goesl/tree/master/LICENSE)
 ![Test Status](https://github.com/byoungdale/goesl/actions/workflows/test.yml/badge.svg?event=push)
+[![Coverage](https://img.shields.io/badge/Coverage-100.0%25-brightgreen)](https://github.com/tj-actions/coverage-badge-go/actions/workflows/test.yml)
 [![Go 1.20 Ready](https://img.shields.io/badge/Go%201.20-Ready-green.svg?style=flat)]()
 
 Forked from [0x19's library](https://github.com/0x19/goesl/) because there are things I need to add quickly and might not want to be merged.
@@ -16,15 +17,12 @@ The point of this library is to fully implement FreeSWITCH ESL and bring outboun
 
 You can find what still needs to be done at [GoESL TODO](https://github.com/byoungdale/goesl/blob/master/TODO.md)
 
-
 ### Examples
 
 There are few different types of examples that can be found at [GoESL Examples](https://github.com/byoungdale/goesl/tree/master/examples).
 
 Feel free to suggest more examples :)
 
-
 ### Contributions / Issues?
 
 For bugs please submit new [issue](https://github.com/byoungdale/goesl/issues/new). For questions, please ask in the [discussion forum](https://github.com/byoungdale/goesl/discussions)
-
