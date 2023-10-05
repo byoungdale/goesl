@@ -1,6 +1,5 @@
 [![License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/byoungdale/goesl/tree/master/LICENSE)
 ![Test Status](https://github.com/byoungdale/goesl/actions/workflows/test.yml/badge.svg?event=push)
-[![Coverage](https://img.shields.io/badge/Coverage-100.0%25-brightgreen)](https://github.com/tj-actions/coverage-badge-go/actions/workflows/test.yml)
 [![Go 1.20 Ready](https://img.shields.io/badge/Go%201.20-Ready-green.svg?style=flat)]()
 
 Forked from [0x19's library](https://github.com/0x19/goesl/) because there are things I need to add quickly and might not want to be merged.
