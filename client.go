@@ -45,7 +45,6 @@ func (c *Client) EstablishConnection() error {
 // Authenticate - Method used to authenticate client against freeswitch. In case of any errors durring so
 // we will return error.
 func (c *Client) Authenticate() error {
-
 	m, err := NewMessage(bufio.NewReaderSize(c, ReadBufferSize), false)
 	if err != nil {
 		Error(ECouldNotCreateMessage, err)
