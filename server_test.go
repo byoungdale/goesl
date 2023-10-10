@@ -7,7 +7,7 @@ import (
 
 func TestStartAndStop(t *testing.T) {
 	// Create a new OutboundServer for testing
-	server, err := NewOutboundServer("localhost:8021")
+	server, err := NewOutboundServer("127.0.0.1:8021")
 	if err != nil {
 		t.Fatalf("Error creating OutboundServer: %v", err)
 	}
@@ -23,7 +23,7 @@ func TestStartAndStop(t *testing.T) {
 		}
 	}()
 
-	conn, err := net.Dial("tcp", "localhost:8021")
+	conn, err := net.Dial("tcp", "127.0.0.1:8021")
 	if err != nil {
 		t.Errorf("Error making test connection to OutboundServer: %v", err)
 		return
