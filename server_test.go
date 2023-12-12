@@ -27,7 +27,7 @@ func TestStartAndStop(t *testing.T) {
 	// Check if running in GitHub Actions environment
 	if os.Getenv("CI") == "true" {
 		// Skip connection test in GitHub Actions environment
-		t.Log("Skipping connection test in GitHub Actions environment.")
+		return
 	} else {
 		conn, err := net.Dial("tcp", "127.0.0.1:8021")
 		if err != nil {
