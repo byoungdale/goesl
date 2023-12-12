@@ -2,6 +2,7 @@ package goesl
 
 import (
 	"net"
+	"os"
 	"testing"
 )
 
@@ -23,12 +24,23 @@ func TestStartAndStop(t *testing.T) {
 		}
 	}()
 
-	conn, err := net.Dial("tcp", "127.0.0.1:8021")
-	if err != nil {
-		t.Errorf("Error making test connection to OutboundServer: %v", err)
-		return
+	// Check if running in GitHub Actions environment
+	if os.Getenv("CI") == "true" {
+		// Use 'app' name in GitHub Actions environment
+		conn, err := net.Dial("tcp", "app:8021")
+		if err != nil {
+			t.Errorf("Error making test connection to OutboundServer: %v", err)
+			return
+		}
+		defer conn.Close()
+	} else {
+		conn, err := net.Dial("tcp", "127.0.0.1:8021")
+		if err != nil {
+			t.Errorf("Error making test connection to OutboundServer: %v", err)
+			return
+		}
+		defer conn.Close()
 	}
-	defer conn.Close()
 
 	// Stop the server
 	server.Stop()
